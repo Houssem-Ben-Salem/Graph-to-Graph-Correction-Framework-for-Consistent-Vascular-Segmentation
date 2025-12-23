@@ -1,0 +1,133 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Virtual environments
+pulmonary-artery-seg-venv/
+pulmonary-artery-seg-server-venv/
+venv/
+ENV/
+env/
+.venv/
+
+# IDE settings
+.idea/
+.vscode/
+*.swp
+*.swo
+.serena/
+
+# Project specific - Data and Results
+DATASET/
+extracted_graphs/
+training_data/
+test_output/
+results/
+paper_figures/
+figures/
+visualizations/
+figure_generation/outputs/
+
+# Experiments (regenerate from training)
+experiments/
+
+# External dependencies (install separately)
+nnUNet/
+
+# Log files
+*.log
+*.log.*
+
+# Temporary and debug files
+debug_features.py
+examine_graph.py
+calculate_anatomy_summary.py
+anatomy_metrics_summary.json
+correspondence_test.log
+correspondence_test_results.json
+graph_correction_test.log
+graph_correction_test_results.json
+graph_extraction.log
+graph_extraction_predictions.log
+extracted_graphs_test.log
+exp1_anatomy_run.log
+test_skeletonization.png
+training_data_analysis.png
+
+# Paper drafts and internal documents
+methodology_paper.md
+graph_correction_strategy.md
+results_impact_table.md
+setup_nnunet.md
+CBM2025_Houssem.pdf
+
+# Analysis results
+analysis_results/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Mac OS
+.DS_Store
+
+# Model checkpoints (large files)
+*.pth
+*.pt
+*.ckpt
+!pretrained/
+
+# Cache
+.cache/
+*.cache
+
+# Temporary files
+*.tmp
+*.temp

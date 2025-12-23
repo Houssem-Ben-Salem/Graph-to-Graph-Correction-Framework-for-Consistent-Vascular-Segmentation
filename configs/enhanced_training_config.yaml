@@ -1,0 +1,92 @@
+# Enhanced Training Configuration for Original Regression Model
+# Focus on breaking through loss plateau with better training techniques
+
+model:
+  # Use original working model architecture
+  hidden_dim: 128
+  num_heads: 8  
+  num_layers: 4
+  dropout: 0.1
+
+training:
+  num_epochs: 300          # Extended training with better techniques
+  learning_rate: 0.0005    # Slightly lower starting LR for better stability
+  weight_decay: 0.0001     # L2 regularization
+  gradient_clip: 1.0       # Gradient clipping
+  
+  # Batch settings
+  batch_size: 1            # Keep working batch size
+  num_workers: 4
+  
+  # Enhanced learning rate scheduling
+  restart_period: 20       # Cosine annealing restart period
+  warmup_epochs: 5         # Learning rate warmup
+  
+  # Plateau handling
+  plateau_patience: 15     # Epochs to wait before additional LR reduction
+  min_improvement: 0.001   # Minimum improvement to reset plateau counter
+
+# Enhanced loss configuration
+loss:
+  # Main regression loss weight - using Smooth L1 instead of MSE
+  position_weight: 1.0
+  
+  # Auxiliary losses
+  magnitude_weight: 0.5
+  confidence_weight: 0.1
+  
+  # Classification loss with adaptive weighting
+  use_classification_loss: true
+  classification_weight: 0.15
+  
+  # Enhanced loss parameters
+  smooth_l1_beta: 1.0      # Smooth L1 transition parameter
+  magnitude_l1_beta: 0.5   # Magnitude loss transition parameter
+
+# Validation settings
+validation:
+  val_interval: 2          # Validate every 2 epochs
+  checkpoint_interval: 10  # Save checkpoint every 10 epochs
+  early_stopping_patience: 50  # Extended patience
+
+# Data settings
+data:
+  use_synthetic: false     # Real data only
+  synthetic_ratio: 0.0
+  
+  # Augmentation for real data
+  augmentation:
+    enabled: true
+    noise_std: 0.05        # Reduced noise for stability
+    confidence_noise: 0.02
+
+# Enhanced training strategies
+optimizer:
+  type: "AdamW"           # Better optimizer than Adam
+  betas: [0.9, 0.999]     # Adam beta parameters
+  eps: 1e-8               # Adam epsilon
+  amsgrad: true           # Better convergence for hard problems
+
+scheduler:
+  type: "CosineAnnealingWarmRestarts"  # Better than ReduceLROnPlateau
+  T_0: 20                 # Initial restart period
+  T_mult: 2               # Period multiplier
+  eta_min_factor: 0.01    # Minimum LR as fraction of initial LR
+
+# Threshold settings
+update_thresholds: false  # Keep fixed threshold initially
+
+# Enhanced logging and monitoring
+logging:
+  log_interval: 5         # Log every 5 batches
+  save_best_loss: true    # Save best loss model
+  save_best_accuracy: true # Save best accuracy model
+  track_class_metrics: true # Track per-class metrics
+  plot_frequency: 10      # Plot curves every 10 epochs
+
+# Experiment settings
+experiment:
+  name: "enhanced_training"
+  description: "Enhanced training techniques for original regression model to break loss plateau"
+  save_training_curves: true
+  track_lr_schedule: true

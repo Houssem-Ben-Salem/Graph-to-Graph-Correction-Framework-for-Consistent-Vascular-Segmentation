@@ -1,0 +1,71 @@
+# Graph Correction Training Configuration with Progressive Strategy
+# Start without focal loss, then add it later
+
+model:
+  hidden_dim: 128
+  num_heads: 8
+  num_layers: 4
+  dropout: 0.1
+  
+  # Start WITHOUT focal loss to establish basic discrimination
+  use_focal_loss: false
+  focal_gamma: 1.5  # Reduced from 2.0 when we enable it later
+  
+  # Class weights for imbalanced data
+  # Based on actual distribution: Keep ~61.7%, Remove ~3.4%, Modify ~34.9%
+  # More moderate weights to avoid overfitting to minority class
+  node_class_weights: [1.5, 8.0, 2.5]  # [keep, remove, modify]
+
+training:
+  num_epochs: 200
+  learning_rate: 0.0005  # Increased from 0.0001
+  weight_decay: 0.00001
+  gradient_clip: 1.0
+  
+  # Batch size
+  batch_size: 4
+  num_workers: 4
+  
+  # Curriculum learning
+  curriculum_enabled: true
+  curriculum_stages:
+    easy:
+      epochs: 40
+      lr_scale: 1.0
+    medium:
+      epochs: 40
+      lr_scale: 0.5
+    hard: 
+      epochs: 40
+      lr_scale: 0.3
+    expert:
+      epochs: 40
+      lr_scale: 0.1
+    real:
+      epochs: 40
+      lr_scale: 0.05
+
+# Loss function weights
+loss_weights:
+  topology_weight: 1.0
+  anatomy_weight: 0.8
+  consistency_weight: 0.6
+  improvement_weight: 1.2
+  regularization_weight: 0.1
+
+# Data augmentation
+augmentation:
+  online_augmentation: true
+  augmentation_prob: 0.3
+  
+# Validation
+validation:
+  val_interval: 5
+  checkpoint_interval: 10
+  early_stopping_patience: 30
+  
+# Logging
+logging:
+  log_interval: 10
+  save_best_only: false
+  track_metrics: true

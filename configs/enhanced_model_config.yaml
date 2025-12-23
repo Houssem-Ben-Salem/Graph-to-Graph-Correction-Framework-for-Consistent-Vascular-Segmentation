@@ -1,0 +1,89 @@
+# Enhanced Graph Correction Model Configuration
+# Designed to address training plateaus and improve beyond 62.7% accuracy
+
+model:
+  hidden_dim: 256          # Increased from 128 for better capacity
+  num_heads: 8             # Multi-head attention
+  num_layers: 6            # Increased from 4 for deeper learning
+  dropout: 0.15            # Slight increase for better regularization
+  use_residual: true       # Enable residual connections
+  use_layer_norm: true     # Layer normalization for stability
+  use_transformer: true    # Mix transformer and GAT layers
+
+training:
+  num_epochs: 300          # Extended training for enhanced model
+  learning_rate: 0.0005    # Slightly lower for stability
+  weight_decay: 0.0001     # L2 regularization
+  gradient_clip: 1.0       # Gradient clipping
+  
+  # Batch settings
+  batch_size: 1            # Keep at 1 to avoid batching issues
+  num_workers: 4
+
+# Enhanced loss configuration
+loss:
+  # Main losses
+  position_weight: 1.0
+  magnitude_weight: 0.5
+  confidence_weight: 0.3
+  classification_weight: 0.2
+  
+  # Additional components for enhanced model
+  consistency_weight: 0.1  # Magnitude consistency loss
+  threshold_reg_weight: 0.01  # Threshold regularization
+  
+  # Class balancing
+  use_class_weights: true  # Enable strong class weighting
+  modify_class_weight: 4.0  # Heavy penalty for modify errors
+  remove_class_weight: 1.0
+
+# Validation settings
+validation:
+  val_interval: 2          # Validate every 2 epochs
+  checkpoint_interval: 10  # Save checkpoint every 10 epochs
+  early_stopping_patience: 50  # Extended patience for enhanced model
+
+# Data settings
+data:
+  use_synthetic: false     # Start with real data only
+  synthetic_ratio: 0.0
+  
+  # Enhanced augmentation
+  augmentation:
+    enabled: true
+    noise_std: 0.1
+    confidence_noise: 0.05
+    spatial_jitter: 0.2    # Small spatial perturbations
+    feature_dropout: 0.1   # Random feature dropout
+
+# Enhanced training strategies
+training_strategy:
+  mixed_precision: true    # Enable mixed precision training
+  cosine_annealing: true   # Cosine learning rate schedule
+  warm_restarts: true      # Warm restarts for cosine annealing
+  
+  # Learning rate schedule parameters
+  T_0: 20                  # Initial restart period
+  T_mult: 2                # Restart period multiplier
+  eta_min: 1e-6           # Minimum learning rate
+
+# Model-specific enhancements
+model_enhancements:
+  learnable_threshold: true    # Learnable magnitude threshold
+  learnable_scale: true       # Learnable correction scale
+  multi_scale_fusion: true    # Multi-scale feature fusion
+  position_skip_connection: true  # Skip connections for positions
+
+# Monitoring and logging
+logging:
+  log_interval: 5          # Log every 5 batches
+  tensorboard: true        # Enable tensorboard logging
+  save_best_only: false    # Save all checkpoints for analysis
+  track_metrics: true
+  plot_frequency: 20       # Plot training curves every 20 epochs
+
+# Experiment settings
+experiment:
+  name: "enhanced_regression_model"
+  description: "Enhanced model to break through loss plateau at 8"
+  tags: ["enhanced", "regression", "plateau_fix"]

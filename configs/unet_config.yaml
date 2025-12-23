@@ -1,0 +1,88 @@
+# Multi U-Net Training Configuration
+
+# Model Configuration (used for individual training)
+model:
+  architecture: "UNet3D"  # Options: UNet2D, UNet3D, AttentionUNet3D, nnUNet
+  in_channels: 1
+  out_channels: 1
+  features: [32, 64, 128, 256, 512]
+  dropout: 0.1
+  normalization: "instance"  # batch, instance, group
+  activation: "relu"
+
+# Multi-architecture training (for train_multiple_unets.py)
+multi_unet:
+  train_unet3d: true
+  train_attention_unet3d: true 
+  train_unet2d: true
+  train_nnunet: false  # Set to true when nnU-Net installation is fixed
+
+# nnU-Net specific configuration
+nnunet:
+  task_id: 501
+  task_name: "PulmonaryArtery"
+  networks_to_train: ["3d_fullres"]  # Options: 2d, 3d_lowres, 3d_fullres, 3d_cascade_fullres
+  trainer: "nnUNetTrainerV2"
+  
+  # Environment paths (will use system env vars if not specified)
+  # nnunet_raw_data_base: "./nnUNet_raw_data"
+  # nnunet_preprocessed: "./nnUNet_preprocessed" 
+  # results_folder: "./nnUNet_results"
+  
+# Data Configuration  
+data:
+  dataset_path: "DATASET/Parse_dataset"
+  patch_size: [128, 128, 128]  # For 3D patches
+  patch_overlap: 0.5
+  train_val_split: 0.8
+  cache_num: 4  # Number of volumes to cache in memory
+  num_workers: 4
+  
+# Training Configuration
+training:
+  batch_size: 2
+  learning_rate: 0.001
+  optimizer: "AdamW"
+  weight_decay: 0.0001
+  scheduler:
+    type: "cosine"  # cosine, step, plateau
+    warmup_epochs: 5
+  epochs: 200
+  early_stopping_patience: 20
+  
+# Loss Configuration
+loss:
+  type: "combined"  # dice, focal, combined
+  dice_weight: 0.5
+  focal_weight: 0.5
+  focal_gamma: 2.0
+  
+# Augmentation Configuration
+augmentation:
+  rotation_range: [-15, 15]  # degrees
+  scale_range: [0.9, 1.1]
+  elastic_deformation: true
+  gaussian_noise: 0.01
+  gaussian_blur: 0.1
+  brightness_range: [-0.1, 0.1]
+  contrast_range: [0.9, 1.1]
+  
+# Validation Configuration
+validation:
+  val_interval: 2  # Validate every N epochs
+  sliding_window_inference: true
+  sw_batch_size: 4
+  overlap: 0.5
+  
+# Checkpointing
+checkpoint:
+  save_best: true
+  save_last: true
+  save_interval: 10
+  monitor_metric: "val_dice"
+  
+# Hardware Configuration
+hardware:
+  device: "cuda"
+  mixed_precision: true
+  gradient_checkpointing: false

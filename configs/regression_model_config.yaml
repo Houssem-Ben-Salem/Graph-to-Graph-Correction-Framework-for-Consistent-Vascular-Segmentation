@@ -1,0 +1,57 @@
+# Configuration for Regression-based Graph Correction Model
+# Based on statistical analysis showing natural clustering by correction magnitude
+
+model:
+  hidden_dim: 128
+  num_heads: 8
+  num_layers: 4
+  dropout: 0.1
+
+training:
+  num_epochs: 200  # Extended training
+  learning_rate: 0.001  # Back to original working rate
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  
+  # Back to working batch size
+  batch_size: 1
+  num_workers: 4
+
+# Loss configuration
+loss:
+  # Main regression loss weight
+  position_weight: 1.0
+  
+  # Auxiliary losses
+  magnitude_weight: 0.5
+  confidence_weight: 0.1
+  
+  # Optional classification loss for comparison
+  use_classification_loss: false
+  classification_weight: 0.1
+
+# Validation settings
+validation:
+  val_interval: 2
+  checkpoint_interval: 5
+  early_stopping_patience: 20
+
+# Data settings
+data:
+  use_synthetic: false  # Start with real data only
+  synthetic_ratio: 0.0  # Can increase later if needed
+  
+  # Augmentation for real data
+  augmentation:
+    enabled: true
+    noise_std: 0.1  # Add small noise to positions
+    confidence_noise: 0.05
+
+# Threshold settings
+update_thresholds: false  # Disable for now to avoid issues
+
+# Logging
+logging:
+  log_interval: 10
+  save_best_only: true
+  track_metrics: true

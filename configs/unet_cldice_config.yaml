@@ -1,0 +1,117 @@
+# U-Net with clDice Loss Configuration
+# This config is for training topology-preserving U-Net models
+
+model:
+  in_channels: 1
+  out_channels: 1
+  base_features: 32                    # Base number of features
+  features: [32, 64, 128, 256, 512]   # Feature progression through encoder
+  trilinear: true                     # Use trilinear upsampling
+  dropout: 0.1                        # Dropout rate
+
+# Loss function configuration
+loss:
+  type: "combined"  # Options: "cldice", "combined", "cbdice"
+  num_iter: 40      # Number of iterations for soft skeletonization
+  smooth: 1.0       # Smoothing factor to avoid division by zero
+  alpha: 0.7        # Weight for clDice component (0.0-1.0)
+  beta: 0.2         # Weight for boundary component (cbdice only)
+  sigma: 1.0        # Gaussian sigma for boundary weighting (cbdice only)
+
+# Optimizer configuration
+optimizer:
+  type: "AdamW"
+  lr: 1e-4
+  weight_decay: 1e-4
+
+# Learning rate scheduler
+scheduler:
+  type: "cosine"     # Options: "cosine", "step", "constant"
+  eta_min: 1e-6      # Minimum learning rate for cosine
+  step_size: 30      # Step size for step scheduler
+  gamma: 0.1         # Gamma for step scheduler
+
+# Data configuration
+data:
+  train_dir: "DATASET/Parse_dataset"
+  val_dir: "DATASET/Parse_dataset"   # Will be split automatically (80/20)
+  patch_size: [64, 64, 64]          # 3D patch dimensions
+  patch_overlap: 0.5                # Overlap between patches for training
+  batch_size: 4
+  val_batch_size: 2                 # Batch size for validation patches
+  num_workers: 4
+  cache_num: 0                      # Number of volumes to cache (0 = no caching)
+  max_train_samples: 5000           # Limit training samples for faster training
+  max_val_samples: 500              # Limit validation samples for faster validation
+
+# Training configuration
+training:
+  epochs: 50                        # Reduced for faster training
+  save_freq: 5                      # Save checkpoint every N epochs
+  grad_clip_norm: 1.0               # Gradient clipping norm
+  early_stopping:
+    patience: 10                    # Stop if no improvement for N epochs
+
+# Output configuration
+output_dir: "experiments/unet_cldice"
+device: "cuda"
+
+# Experiment variants
+experiments:
+  # Pure clDice training
+  pure_cldice:
+    loss:
+      type: "cldice"
+      alpha: 1.0
+    training:
+      epochs: 200
+  
+  # Combined clDice + standard Dice (recommended)
+  combined:
+    loss:
+      type: "combined"
+      alpha: 0.7
+    training:
+      epochs: 150
+  
+  # Advanced cbDice with boundary awareness
+  cbdice:
+    loss:
+      type: "cbdice"
+      alpha: 0.5
+      beta: 0.3
+      sigma: 1.0
+    training:
+      epochs: 180
+  
+  # Conservative clDice (less aggressive topology preservation)
+  conservative:
+    loss:
+      type: "combined"
+      alpha: 0.3
+      num_iter: 20
+    training:
+      epochs: 120
+  
+  # Aggressive clDice (strong topology preservation)
+  aggressive:
+    loss:
+      type: "combined"
+      alpha: 0.9
+      num_iter: 60
+    training:
+      epochs: 200
+
+# Hyperparameter search space (for future use)
+hyperparameter_search:
+  alpha:
+    type: "uniform"
+    low: 0.3
+    high: 0.9
+  num_iter:
+    type: "choice"
+    values: [20, 30, 40, 50, 60]
+  lr:
+    type: "loguniform"
+    low: 1e-5
+    high: 1e-3

@@ -1,0 +1,119 @@
+# EXP-3: Anatomy-Only Configuration
+# Ablation study: Remove topology constraints to show their necessity
+# Based on enhanced_model_config.yaml with topology losses disabled
+
+experiment:
+  name: "exp3_anatomy_only"
+  description: "Anatomy correction without topology constraints - ablation study"
+  tags: ["ablation", "anatomy_only", "no_topology"]
+
+model:
+  # SAME AS FULL MODEL - No architectural changes
+  hidden_dim: 256
+  num_heads: 8
+  num_layers: 6
+  dropout: 0.15
+  use_residual: true
+  use_layer_norm: true
+  use_transformer: true
+
+training:
+  # SAME AS FULL MODEL
+  num_epochs: 300
+  learning_rate: 0.0005
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+
+  # Batch settings
+  batch_size: 1
+  num_workers: 4
+
+# MODIFIED LOSS - Anatomy components only
+loss:
+  # Main topology losses (DISABLED for this ablation)
+  position_weight: 0.0          # ❌ DISABLED: Position correction accuracy
+  magnitude_weight: 0.0         # ❌ DISABLED: Magnitude prediction accuracy
+  confidence_weight: 0.0        # ❌ DISABLED: Correction confidence
+  classification_weight: 0.0    # ❌ DISABLED: Node operation classification
+
+  # Consistency and regularization (DISABLED)
+  consistency_weight: 0.0       # ❌ DISABLED: Magnitude consistency loss
+  threshold_reg_weight: 0.01    # Keep minimal regularization
+
+  # Anatomy losses (ENABLED - This is what we're testing!)
+  murray_law_weight: 1.0        # ✅ ENABLED: Murray's law compliance
+  tapering_weight: 0.8          # ✅ ENABLED: Vessel tapering consistency
+  angle_weight: 0.6             # ✅ ENABLED: Branching angle realism
+  radius_consistency_weight: 0.5  # ✅ ENABLED: Radius smoothness
+
+  # Class balancing (same as full model)
+  use_class_weights: true
+  modify_class_weight: 4.0
+  remove_class_weight: 1.0
+
+# Validation settings (same as full model)
+validation:
+  val_interval: 2
+  checkpoint_interval: 10
+  early_stopping_patience: 50
+
+# Data settings (same as full model)
+data:
+  use_synthetic: false
+  synthetic_ratio: 0.0
+
+  # Enhanced augmentation
+  augmentation:
+    enabled: true
+    noise_std: 0.1
+    confidence_noise: 0.05
+    spatial_jitter: 0.2
+    feature_dropout: 0.1
+
+# Training strategy (same as full model)
+training_strategy:
+  mixed_precision: true
+  cosine_annealing: true
+  warm_restarts: true
+
+  # Learning rate schedule
+  T_0: 20
+  T_mult: 2
+  eta_min: 1e-6
+
+# Model enhancements (same as full model)
+model_enhancements:
+  learnable_threshold: true
+  learnable_scale: true
+  multi_scale_fusion: true
+  position_skip_connection: true
+
+# Monitoring and logging
+logging:
+  log_interval: 5
+  tensorboard: true
+  save_best_only: false
+  track_metrics: true
+  plot_frequency: 20
+
+# Output directories
+output:
+  experiment_dir: "experiments/ablation/exp3_anatomy_only"
+  checkpoint_dir: "experiments/ablation/exp3_anatomy_only/checkpoints"
+  results_dir: "experiments/ablation/exp3_anatomy_only/results"
+
+# Evaluation focus
+evaluation:
+  # Emphasize topology metrics to show degradation
+  primary_metrics:
+    - dice_score
+    - num_connected_components    # Should be HIGH (failure)
+    - bifurcation_f1
+
+  topology_metrics:
+    - connected_component_ratio   # Should show fragmentation
+    - connectivity_score          # Should be LOW (failure)
+    - skeleton_continuity         # Should be broken
+
+  compute_topology_violations: true
+  generate_topology_visualizations: true
