@@ -136,3 +136,43 @@ analysis_results/
 # Temporary files
 *.tmp
 *.temp
+
+# =============================================================================
+# Development/Debug Scripts (not needed for core pipeline)
+# =============================================================================
+
+# Figure generation scripts (paper figures)
+scripts/create_paper_figure_1.py
+scripts/create_publication_figures.py
+scripts/create_simple_visualizations.py
+scripts/create_specialized_visualizations.py
+scripts/create_topology_visualizations.py
+scripts/create_3d_topology_visualizations.py
+scripts/create_all_visualizations.py
+scripts/generate_advanced_publication_figures.py
+scripts/generate_all_publication_figures.py
+scripts/generate_basic_publication_figures.py
+scripts/generate_graph_visualizations.py
+scripts/generate_method_comparison_figures.py
+scripts/generate_minimal_figures.py
+scripts/generate_paper_figure.py
+scripts/generate_paper_figure_v2.py
+scripts/generate_publication_figures.py
+scripts/generate_separate_figures.py
+scripts/generate_topology_showcase.py
+scripts/generate_tradeoff_figure.py
+scripts/visualize_graphs.py
+
+# Analysis and debug scripts
+scripts/analyze_class_statistics.py
+scripts/analyze_enhanced_training_data.py
+scripts/analyze_existing_predictions.py
+scripts/analyze_graph_richness.py
+scripts/analyze_predictions.py
+scripts/analyze_reconstruction_failure.py
+scripts/analyze_results.py
+scripts/analyze_training_metrics.py
+scripts/debug_real_graphs.py
+scripts/check_graph_attributes.py
+scripts/check_node_structure.py
+scripts/summarize_extracted_graphs.py
