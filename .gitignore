@@ -64,6 +64,11 @@ env/
 *.swp
 *.swo
 .serena/
+.claude/
+
+# Internal documentation (not for public repo)
+CLAUDE.md
+CLEANUP_FOR_GITHUB.md
 
 # Project specific - Data and Results
 DATASET/
@@ -74,7 +79,7 @@ results/
 paper_figures/
 figures/
 visualizations/
-figure_generation/outputs/
+figure_generation/
 
 # Experiments (regenerate from training)
 experiments/

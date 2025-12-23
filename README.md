@@ -7,7 +7,7 @@
 A novel framework for enhancing vascular segmentation by operating directly on graph representations. This method transforms imperfect deep learning predictions into anatomically and topologically coherent segmentations, achieving a **92% reduction in disconnected components** while improving volumetric accuracy.
 
 <p align="center">
-  <img src="docs/images/pipeline_overview.png" alt="Pipeline Overview" width="800"/>
+  <img src="docs/images/pipeline_overview.pdf" alt="Pipeline Overview" width="800"/>
 </p>
 
 ## Key Features
