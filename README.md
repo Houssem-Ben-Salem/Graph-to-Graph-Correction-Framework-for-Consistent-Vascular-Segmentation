@@ -3,8 +3,11 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Conference](https://img.shields.io/badge/ICPRAI-2026-green.svg)](http://icprai2026.com)
 
 A framework for enhancing vascular segmentation by operating directly on graph representations. This method transforms imperfect deep learning predictions into anatomically and topologically coherent segmentations, achieving a **92% reduction in disconnected components** while improving volumetric accuracy.
+
+> **Accepted at ICPRAI 2026** — 5th International Conference on Pattern Recognition and Artificial Intelligence, Concordia University, Montréal, June 15–18, 2026.
 
 <p align="center">
   <img src="docs/images/pipeline_overview.svg" alt="Pipeline Overview" width="800"/>
@@ -19,11 +22,17 @@ A framework for enhancing vascular segmentation by operating directly on graph r
 
 ## Results Summary
 
-| Method | Dice Score | Components ↓ | Murray's Law | HD95 (mm) ↓ |
-|--------|------------|--------------|--------------|-------------|
-| nnU-Net | 0.859 | 76.5 | 0.651 | 27.3 |
-| U-Net + clDice | 0.780 | 185 | - | 42 |
-| **Ours** | **0.874** | **28.1** | **0.673** | **31.8** |
+Evaluated on the [PARSE 2022](https://parse2022.grand-challenge.org/) test set (N = 18) — comparison with state-of-the-art methods:
+
+| Method | Dice Score | Components ↓ | Bifurcation F1 | Params |
+|--------|------------|--------------|----------------|--------|
+| nnU-Net | 0.859 | 76.5 | 0.54 | 31.1 M |
+| clDice (Attention U-Net) | 0.780 | 185 | 0.38 | 34.0 M |
+| Morphological post-processing | 0.806 | 76.7 | 0.31 | — |
+| CRF refinement | 0.694 | 1.0 | 0.07 | — |
+| **Ours (Graph-to-Graph)** | **0.874** | **28.1** | **0.87** | **2.3 M** |
+
+All improvements over the baseline reach *p* < 0.001 (paired *t*-tests, Bonferroni-corrected) with Cohen's *d* > 2.0 on topological metrics.
 
 ## Installation
 
@@ -37,7 +46,7 @@ A framework for enhancing vascular segmentation by operating directly on graph r
 ```bash
 # Clone the repository
 git clone https://github.com/Houssem-Ben-Salem/Graph-to-Graph-Correction-Framework-for-Consistent-Vascular-Segmentation.git
-cd Graph-to-Graph-Correction-Framework
+cd Graph-to-Graph-Correction-Framework-for-Consistent-Vascular-Segmentation
 
 # Create virtual environment
 python -m venv venv
@@ -246,12 +255,14 @@ unzip pretrained_models.zip -d pretrained/
 If you use this code in your research, please cite:
 
 ```bibtex
-@article{bensalem2025graphtograph,
-  title={Graph-to-Graph Framework for Topologically and Anatomically Coherent Pulmonary Artery Segmentation},
-  author={Ben Salem, Houssem and Duong, Luc and Coti, Camille},
-  journal={Computers in Biology and Medicine},
-  year={2025},
-  publisher={Elsevier}
+@inproceedings{bensalem2026graphtograph,
+  title     = {Graph-to-Graph Framework for Topologically and Anatomically Coherent Pulmonary Artery Segmentation},
+  author    = {Ben Salem, Houssem and Duong, Luc and Coti, Camille},
+  booktitle = {Proceedings of the 5th International Conference on Pattern Recognition and Artificial Intelligence (ICPRAI 2026)},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer},
+  address   = {Montr\'eal, Canada},
+  year      = {2026}
 }
 ```
 
@@ -266,5 +277,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-- **Houssem Ben Salem** - houssem.ben-salem.1@ens.etsmtl.ca
-- École de technologie supérieure (ÉTS), Montreal, Canada
+- **Houssem Ben Salem** — houssem.ben-salem.1@ens.etsmtl.ca
+- [ORCID](https://orcid.org/0009-0009-0837-422X)
+- École de technologie supérieure (ÉTS), Montréal, Canada
